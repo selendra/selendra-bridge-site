@@ -6,13 +6,13 @@ module.exports = {
       plugins: [
         require('tailwindcss'),
         require('autoprefixer'),
-        {
-          add: [
-            new webpack.DefinePlugin({
-              process: {env: {}}
-            })
-          ]
-        }
+        // {
+        //   add: [
+        //     new webpack.DefinePlugin({
+        //       process: {env: {}}
+        //     })
+        //   ]
+        // }
       ],
       
     },
