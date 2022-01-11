@@ -4,7 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { ContextProvider } from './context/context';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
 import keyring from '@polkadot/ui-keyring';
-import App from './app';
+import App from './App';
 import { GlobalStyle } from './styles/globalStyle';
 
 cryptoWaitReady().then(() => {
