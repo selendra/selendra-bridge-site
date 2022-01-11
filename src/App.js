@@ -1,20 +1,33 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Header from "./components/header";
-import Binding from "./pages/binding";
-import Transfer from "./pages/transfer";
-import TransferNative from "./pages/transfer-native";
+import {
+  BrowserRouter,
+  Routes,
+  Route
+} from 'react-router-dom';
+import styled from 'styled-components';
+import Header from './components/header';
+import Binding from './pages/binding';
+import TransferEvm from './pages/transfer-evm';
+import TransferNative from './pages/transfer-native';
 
-export default function App() {
+export default function App () {
   return (
     <BrowserRouter>
-      <div className="h-screen gradient-bg-welcome">
+      <Container>
         <Header />
         <Routes>
           <Route path='/' element={<Binding />} />
-          <Route path='/transfer' element={<Transfer />} />
+          <Route path='/transfer-evm' element={<TransferEvm />} />
           <Route path='/transfer-native' element={<TransferNative />} />
         </Routes>
-      </div>
+      </Container>
     </BrowserRouter>
   );
 }
+
+const Container = styled.div`
+  min-height: 100vh;
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+    radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+    radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+`;

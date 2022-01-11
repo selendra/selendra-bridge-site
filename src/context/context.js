@@ -2,23 +2,12 @@ import { createContext, useState } from 'react';
 import toast from 'react-hot-toast';
 
 export const Context = createContext();
-export const ContextProvider = ({children}) => {
+export const ContextProvider = ({ children }) => {
   const [account, setAccount] = useState('');
 
-  async function SwitchEthChain() {
-    try {
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x61' }], // chainId must be in hexadecimal numbers
-      })
-    } catch(error) {
-      console.log(error);
-    }
-  }
-
-  async function ConnectWallet() {
-    if(window.ethereum) {
-      // SwitchEthChain();
+  async function ConnectWallet () {
+    console.log('Connecting to Wallet...');
+    if (window.ethereum) {
       await window.ethereum
         .request({ method: 'eth_requestAccounts' })
         .then(accounts => {
@@ -36,5 +25,5 @@ export const ContextProvider = ({children}) => {
         ConnectWallet
       }}
     >{children}</Context.Provider>
-  )
-}
+  );
+};

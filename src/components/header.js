@@ -1,26 +1,73 @@
-import { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { Context } from '../context/context';
+import styled from 'styled-components';
+import { GlobalContainer } from '../styles/globalStyle';
 import logo from '../assets/logo.png';
+import { Link, useLocation } from 'react-router-dom';
+import { useContext, useEffect } from 'react';
+import { Context } from '../context/context';
 
-export default function Header() {
+export default function Header () {
+  let location = useLocation();
   const { ConnectWallet, account } = useContext(Context);
 
+  useEffect(() => {
+    ConnectWallet();
+  }, [ConnectWallet]);
+
   return (
-    <header className='h-container h-24 p-4 flex justify-between items-center'>
-      <img src={logo} alt='' className='w-26 h-11' />
-      <div className='h-width text-sm font-bold flex justify-around items-center'>
-        <Link to='/'>
-          <p className='transition-all hover:text-pink'>Binding</p>
-        </Link>
-        <Link to='/transfer'>
-          <p className='transition-all hover:text-pink'>Transfer EVM</p>
-        </Link>
-        <Link to='/transfer-native'>
-          <p className='transition-all hover:text-pink'>Transfer Native</p>
-        </Link>
-        <button onClick={ConnectWallet} className="w-52 h-12 text-base font-bold bg-pink hover:opacity-80 transition-all rounded-xl shadow-lg cursor-pointer px-4 ml-2">{account ? `0x...${account.slice(-6)}` : 'Connect Wallet'}</button>
-      </div>
-    </header>
-  )
+    <GlobalContainer>
+      <Wrapper>
+        <Logo src={logo} alt='' />
+        <Navigation>
+          <Nav active={(location.pathname === '/').toString()} to='/'>Binding</Nav>
+          <Nav active={(location.pathname === '/transfer-evm').toString()} to='/transfer-evm'>Transfer EVM</Nav>
+          <Nav active={(location.pathname === '/transfer-native').toString()} to='/transfer-native'>Transfer Native</Nav>
+          <Button onClick={ConnectWallet}>{account ? `0x...${account.slice(-6)}` : 'Connect Wallet'}</Button>
+        </Navigation>
+      </Wrapper>
+    </GlobalContainer>
+  );
 }
+
+const Wrapper = styled.header`
+  height: 6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+const Logo = styled.img`
+  width: auto;
+  height: 2.75rem;
+`;
+const Navigation = styled.div`
+  max-width: 36rem;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-gap: 15px;
+  align-items: center;
+`;
+const Nav = styled(Link)`
+  color: ${props => props.active === 'true' ? '#ED1576' : '#FFF'};
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: .6s all;
+  :hover {
+    color: #ED1576;
+  }
+`;
+const Button = styled.button`
+  width: 13rem;
+  height: 2.75rem;
+  color: #FFF;
+  background: #ED1576;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: .6s all;
+  :hover {
+    opacity: 0.8;
+  }
+`;
