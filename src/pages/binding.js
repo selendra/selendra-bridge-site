@@ -1,31 +1,35 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { ethers } from 'ethers';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import keyring from '@polkadot/ui-keyring';
 import toast from 'react-hot-toast';
+import Select from 'react-select';
 import Input from '../components/input';
 import Button from '../components/button';
 import { Card, Label } from '../styles/globalStyle';
+import {
+  web3Accounts,
+  web3Enable,
+  web3FromAddress,
+  web3FromSource,
+  web3ListRpcProviders,
+  web3UseRpcProvider
+} from '@polkadot/extension-dapp';
+import { Context } from '../context/context';
 
 export default function Binding () {
-  const [json, setJson] = useState();
-  const [password, setPassword] = useState('');
+  const { substrateAccount, ConnectSubstrate } = useContext(Context);
+  // const [json, setJson] = useState();
+  // const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [addressSinger, setAddressSigner] = useState('');
 
   const selendraTypes = {
-    "EvmAddress": "H160",
-    "EthereumTxHash": "H256",
-    "TokenId": "U256",
-    "Address": "MultiAddress",
-    "LookupSource": "MultiAddress"
-  };
-
-  const changeHandler = (event) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      setJson(JSON.parse(reader.result));
-    };
-    reader.readAsText(event.target.files[0]);
+    EvmAddress: 'H160',
+    EthereumTxHash: 'H256',
+    TokenId: 'U256',
+    Address: 'MultiAddress',
+    LookupSource: 'MultiAddress'
   };
 
   async function handleBinding () {
@@ -34,41 +38,57 @@ export default function Binding () {
       const wsProvider = new WsProvider('wss://rpc1-testnet.selendra.org');
       const api = await ApiPromise.create({ provider: wsProvider, types: selendraTypes });
 
-      const pair = await keyring.restoreAccount(json, password);
-      pair.decodePkcs8(password);
-      // console.log(pair)
+      // const pair = await keyring.restoreAccount(json, password);
+      // pair.decodePkcs8(password);
+      const publicKey = keyring.decodeAddress(addressSinger);
 
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const accounts = await provider.listAccounts();
-      // console.log(accounts);
 
       const signer = provider.getSigner(accounts[0]);
-      const signature = await signer.signMessage(`Selendra evm:${ethers.utils.hexlify(pair.publicKey).slice(2)}`);
+      const signature = await signer.signMessage(`Selendra evm:${ethers.utils.hexlify(publicKey).slice(2)}`);
 
-      const nonce = await api.rpc.system.accountNextIndex(json.address);
+      const nonce = await api.rpc.system.accountNextIndex(addressSinger);
+
+      // finds an injector for an address
+      const injector = await web3FromAddress(addressSinger);
 
       await api.tx.evmAccounts
         .claimAccount(accounts[0], ethers.utils.arrayify(signature))
-        .signAndSend(pair, {
-          nonce
-        }, ({ events = [], status }) => {
+        .signAndSend(addressSinger, { signer: injector.signer }, ({ status }) => {
+          console.log(status);
           if (status.isFinalized) {
-            toast.success(`${(pair.address).slice(0, 5)}... has bound with EVM address: ${accounts[0].slice(0, 5)}...`);
+            toast.success(`${(addressSinger).slice(0, 5)}... has bound with EVM address: ${accounts[0].slice(0, 5)}...`);
             setLoading(false);
           }
         });
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
+  }
+
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      borderBottom: '1px dotted pink',
+      color: state.isSelected ? 'red' : 'blue',
+      padding: 20,
+      zIndex: 999
+    })
+  };
+
+  async function onChangeHandler (val) {
+    setAddressSigner(val.value);
   }
 
   return (
     <Card>
-      <Label>Upload JSON</Label>
-      <Input type='file' onChange={changeHandler} />
-      <Label>Password</Label>
-      <Input value={password} type='password' onChange={e => setPassword(e.target.value)} />
+      {substrateAccount.length
+        ? <Select options={substrateAccount} onChange={onChangeHandler} styles={customStyles} />
+        : <Button onClick={ConnectSubstrate}>Connect Substrate Wallet</Button>
+      }
       <Button loading={loading} onClick={handleBinding}>Bind Account</Button>
     </Card>
   );
-};
+}
