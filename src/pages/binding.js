@@ -3,18 +3,11 @@ import { ethers } from 'ethers';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import keyring from '@polkadot/ui-keyring';
 import toast from 'react-hot-toast';
-import Select from 'react-select';
-import Input from '../components/input';
+import Select from '../components/select';
+// import Input from '../components/input';
 import Button from '../components/button';
 import { Card, Label } from '../styles/globalStyle';
-import {
-  web3Accounts,
-  web3Enable,
-  web3FromAddress,
-  web3FromSource,
-  web3ListRpcProviders,
-  web3UseRpcProvider
-} from '@polkadot/extension-dapp';
+import { web3FromAddress } from '@polkadot/extension-dapp';
 import { Context } from '../context/context';
 
 export default function Binding () {
@@ -48,7 +41,7 @@ export default function Binding () {
       const signer = provider.getSigner(accounts[0]);
       const signature = await signer.signMessage(`Selendra evm:${ethers.utils.hexlify(publicKey).slice(2)}`);
 
-      const nonce = await api.rpc.system.accountNextIndex(addressSinger);
+      // const nonce = await api.rpc.system.accountNextIndex(addressSinger);
 
       // finds an injector for an address
       const injector = await web3FromAddress(addressSinger);
@@ -68,16 +61,6 @@ export default function Binding () {
     }
   }
 
-  const customStyles = {
-    option: (provided, state) => ({
-      ...provided,
-      borderBottom: '1px dotted pink',
-      color: state.isSelected ? 'red' : 'blue',
-      padding: 20,
-      zIndex: 999
-    })
-  };
-
   async function onChangeHandler (val) {
     setAddressSigner(val.value);
   }
@@ -85,7 +68,10 @@ export default function Binding () {
   return (
     <Card>
       {substrateAccount.length
-        ? <Select options={substrateAccount} onChange={onChangeHandler} styles={customStyles} />
+        ? <div>
+            <Label>Select Substrate Address</Label>
+            <Select options={substrateAccount} onChange={onChangeHandler} />
+          </div>
         : <Button onClick={ConnectSubstrate}>Connect Substrate Wallet</Button>
       }
       <Button loading={loading} onClick={handleBinding}>Bind Account</Button>

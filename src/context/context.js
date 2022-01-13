@@ -23,13 +23,17 @@ export const ContextProvider = ({ children }) => {
     }
   }
 
+  // function StrSlice (str) {
+  //   return `${str.slice(0, 10)}+....+${str.slice(-10)}`;
+  // }
+
   async function ConnectSubstrate () {
     const allInjected = await web3Enable('Selendra Bridge');
 
     const allAccounts = await web3Accounts();
     const reArray = allAccounts.map(i => {
       const newArr = {};
-      newArr.label = i.address;
+      newArr.label = (i.address);
       newArr.value = i.address;
       return newArr;
     });

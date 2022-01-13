@@ -56,7 +56,7 @@ export default function TransferEvm () {
 
   return (
     <Card>
-      <Label>Address</Label>
+      <Label>Transfer to address</Label>
       <Input value={address} onChange={e => setAddress(e.target.value)} />
       <Label>Amount</Label>
       <Input value={amount} onChange={e => setAmount(e.target.value)} />

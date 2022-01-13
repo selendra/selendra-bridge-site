@@ -6,7 +6,7 @@ import Input from '../components/input';
 import Button from '../components/button';
 import { Card, Label } from '../styles/globalStyle';
 import toast from 'react-hot-toast';
-import Select from 'react-select';
+import Select from '../components/select';
 import { Context } from '../context/context';
 import { web3FromAddress } from '@polkadot/extension-dapp';
 
@@ -14,18 +14,18 @@ export default function TransferNative () {
   const { substrateAccount, ConnectSubstrate } = useContext(Context);
   const [addressSinger, setAddressSigner] = useState('');
   const [amount, setAmount] = useState('');
-  const [json, setJson] = useState();
-  const [password, setPassword] = useState('');
+  // const [json, setJson] = useState();
+  // const [password, setPassword] = useState('');
   const [recipient, setRecipient] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const changeHandler = (event) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      setJson(JSON.parse(reader.result));
-    };
-    reader.readAsText(event.target.files[0]);
-  };
+  // const changeHandler = (event) => {
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     setJson(JSON.parse(reader.result));
+  //   };
+  //   reader.readAsText(event.target.files[0]);
+  // };
 
   const handleNativeTransfer = async () => {
     try {
@@ -61,16 +61,6 @@ export default function TransferNative () {
     }
   };
 
-  const customStyles = {
-    option: (provided, state) => ({
-      ...provided,
-      borderBottom: '1px dotted pink',
-      color: state.isSelected ? 'red' : 'blue',
-      padding: 20,
-      zIndex: 999
-    })
-  };
-
   async function onChangeHandler (val) {
     setAddressSigner(val.value);
   }
@@ -82,10 +72,13 @@ export default function TransferNative () {
       <Label>Password</Label>
       <Input type='password' value={password} onChange={e => setPassword(e.target.value)} /> */}
       {substrateAccount.length
-        ? <Select options={substrateAccount} onChange={onChangeHandler} styles={customStyles} />
+        ? <div>
+            <Label>Transfer from Substrate address</Label>
+            <Select options={substrateAccount} onChange={onChangeHandler} />
+          </div>
         : <Button onClick={ConnectSubstrate}>Connect Substrate Wallet</Button>
       }
-      <Label>Address</Label>
+      <Label>Transfer to EVM address</Label>
       <Input value={recipient} onChange={e => setRecipient(e.target.value)} />
       <Label>Amount</Label>
       <Input value={amount} onChange={e => setAmount(e.target.value)} />
