@@ -4,9 +4,10 @@ import logo from '../assets/logo.png';
 import { Link, useLocation } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 import { Context } from '../context/context';
+import Sidebar from './sidebar';
 
 export default function Header () {
-  let location = useLocation();
+  const location = useLocation();
   const { ConnectWallet, account } = useContext(Context);
 
   useEffect(() => {
@@ -18,11 +19,12 @@ export default function Header () {
       <Wrapper>
         <Logo src={logo} alt='' />
         <Navigation>
-          <Nav active={(location.pathname === '/').toString()} to='/'>Binding</Nav>
+          <Nav active={(location.pathname === '/').toString()} to='/'>Account Binding</Nav>
           <Nav active={(location.pathname === '/transfer-evm').toString()} to='/transfer-evm'>Transfer EVM</Nav>
           <Nav active={(location.pathname === '/transfer-native').toString()} to='/transfer-native'>Transfer Native</Nav>
           <Button onClick={ConnectWallet}>{account ? `0x...${account.slice(-6)}` : 'Connect Metamask'}</Button>
         </Navigation>
+        <Sidebar />
       </Wrapper>
     </GlobalContainer>
   );
@@ -39,12 +41,15 @@ const Logo = styled.img`
   height: 2.75rem;
 `;
 const Navigation = styled.div`
-  max-width: 36rem;
+  max-width: 40rem;
   width: 100%;
   display: grid;
   grid-template-columns: auto auto auto auto;
   grid-gap: 15px;
   align-items: center;
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 const Nav = styled(Link)`
   color: ${props => props.active === 'true' ? '#ED1576' : '#FFF'};

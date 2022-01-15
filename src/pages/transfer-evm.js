@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { u8aToHex } from '@polkadot/util';
 import { decodeAddress } from '@polkadot/util-crypto';
@@ -7,12 +7,19 @@ import { abi } from '../constant/abi.json';
 import Input from '../components/input';
 import Button from '../components/button';
 import toast from 'react-hot-toast';
+import { Context } from '../context/context';
+import AddSEL from '../components/addSEL';
 
 export default function TransferEvm () {
   const contractAddress = '0xe8f9290AC56f4045F070F0306f0dAfba57e2280a';
+  const { SwitchNetworkToRopsten } = useContext(Context);
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    SwitchNetworkToRopsten();
+  }, [SwitchNetworkToRopsten]);
 
   const getHex = (address) => {
     const publicKey = decodeAddress(address);
@@ -56,6 +63,7 @@ export default function TransferEvm () {
 
   return (
     <Card>
+      <AddSEL />
       <Label>Transfer to address</Label>
       <Input value={address} onChange={e => setAddress(e.target.value)} />
       <Label>Amount</Label>

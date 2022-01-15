@@ -21,6 +21,9 @@ export const GlobalStyle = createGlobalStyle`
 export const GlobalContainer = styled.div`
   max-width: 74rem;
   margin: 0 auto;
+  @media screen and (max-width: 74rem) {
+    padding: 0 10px;
+  }
 `;
 export const Card = styled.div`
   max-width: 28rem;
@@ -32,6 +35,9 @@ export const Card = styled.div`
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(0, 0, 0, 0.3);
   padding: 20px;
+  @media screen and (max-width: 28rem) {
+    margin: 6rem 10px;
+  }
 `;
 export const Label = styled.p`
   font-weight: 600;

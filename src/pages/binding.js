@@ -1,21 +1,25 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { ApiPromise, WsProvider } from '@polkadot/api';
+import { web3FromAddress } from '@polkadot/extension-dapp';
 import keyring from '@polkadot/ui-keyring';
 import toast from 'react-hot-toast';
 import Select from '../components/select';
 // import Input from '../components/input';
 import Button from '../components/button';
 import { Card, Label } from '../styles/globalStyle';
-import { web3FromAddress } from '@polkadot/extension-dapp';
 import { Context } from '../context/context';
 
 export default function Binding () {
-  const { substrateAccount, ConnectSubstrate } = useContext(Context);
+  const { substrateAccount, ConnectSubstrate, SwitchNetworkToSEL } = useContext(Context);
   // const [json, setJson] = useState();
   // const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [addressSinger, setAddressSigner] = useState('');
+
+  useEffect(() => {
+    SwitchNetworkToSEL();
+  }, [SwitchNetworkToSEL]);
 
   const selendraTypes = {
     EvmAddress: 'H160',

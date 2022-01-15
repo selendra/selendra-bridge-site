@@ -1,7 +1,7 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import keyring from '@polkadot/ui-keyring';
+// import keyring from '@polkadot/ui-keyring';
 import Input from '../components/input';
 import Button from '../components/button';
 import { Card, Label } from '../styles/globalStyle';
@@ -9,15 +9,20 @@ import toast from 'react-hot-toast';
 import Select from '../components/select';
 import { Context } from '../context/context';
 import { web3FromAddress } from '@polkadot/extension-dapp';
+import AddSEL from '../components/addSEL';
 
 export default function TransferNative () {
-  const { substrateAccount, ConnectSubstrate } = useContext(Context);
+  const { substrateAccount, ConnectSubstrate, SwitchNetworkToRopsten } = useContext(Context);
   const [addressSinger, setAddressSigner] = useState('');
   const [amount, setAmount] = useState('');
-  // const [json, setJson] = useState();
-  // const [password, setPassword] = useState('');
   const [recipient, setRecipient] = useState('');
   const [loading, setLoading] = useState(false);
+  // const [json, setJson] = useState();
+  // const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    SwitchNetworkToRopsten();
+  }, [SwitchNetworkToRopsten]);
 
   // const changeHandler = (event) => {
   //   const reader = new FileReader();
@@ -71,6 +76,7 @@ export default function TransferNative () {
       <Input type='file' onChange={changeHandler} />
       <Label>Password</Label>
       <Input type='password' value={password} onChange={e => setPassword(e.target.value)} /> */}
+      <AddSEL />
       {substrateAccount.length
         ? <div>
             <Label>Transfer from Substrate address</Label>
