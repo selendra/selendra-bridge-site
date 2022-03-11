@@ -19,7 +19,7 @@ export default function Header () {
       <Wrapper>
         <Logo src={logo} alt='' />
         <Navigation>
-          <Nav active={(location.pathname === '/').toString()} to='/'>Account Binding</Nav>
+          {/* <Nav active={(location.pathname === '/').toString()} to='/'>Account Binding</Nav> */}
           <Nav active={(location.pathname === '/transfer-evm').toString()} to='/transfer-evm'>Transfer EVM</Nav>
           <Nav active={(location.pathname === '/transfer-native').toString()} to='/transfer-native'>Transfer Native</Nav>
           <Button onClick={ConnectWallet}>{account ? `0x...${account.slice(-6)}` : 'Connect Metamask'}</Button>

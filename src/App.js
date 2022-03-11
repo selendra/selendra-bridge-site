@@ -1,7 +1,8 @@
 import {
   BrowserRouter,
   Routes,
-  Route
+  Route,
+  Navigate
 } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from './components/header';
@@ -15,7 +16,7 @@ export default function App () {
       <Container>
         <Header />
         <Routes>
-          <Route path='/' element={<Binding />} />
+          <Route path='/' element={<Navigate to='/transfer-evm' />} />
           <Route path='/transfer-evm' element={<TransferEvm />} />
           <Route path='/transfer-native' element={<TransferNative />} />
         </Routes>
